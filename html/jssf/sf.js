@@ -243,7 +243,7 @@ function getJSON(href,param) {
 
 var server='';
 function postandgetJSON(service,action,json,callback,parm,prms) {
-	var href=server+"/ecs/?Service="+service+"&Action="+action;
+	var href=server+"/sf/?Service="+service+"&Action="+action;
 	console.log('Richiesta:'+href);
 	href=href+"&_T="+getDataOraElab();
 	if (prms!=undefined){
@@ -671,6 +671,7 @@ async function getIndirizzoFromLatLon(lat, lon){
 	return(res);
 }
 
+var idsequence=1;
 function generateID(){
 	var ret=new Date().getTime()+"_"+idsequence;
 	idsequence=idsequence+1;
@@ -696,9 +697,9 @@ function getSrcUserImage(u){ // restituisce l'src dell'immagine profilo utente
         var veic = Risorsa.get(u);
         if(veic == undefined){ Risorsa.load(u) }
         if(veic != undefined && veic.IMMAGINE != undefined){
-            var src_image = server+'/ecs/?Service=Document&Action=getdoc&hid='+veic.IMMAGINE+'&tipodoc=DOC';
+            var src_image = server+'/sf/?Service=Document&Action=getdoc&hid='+veic.IMMAGINE+'&tipodoc=DOC';
         } else if(veic != undefined && veic.IMAGE != undefined){
-            var src_image = server+'/ecs/?Service=Document&Action=getdoc&hid='+veic.IMAGE+'&tipodoc=DOC';
+            var src_image = server+'/sf/?Service=Document&Action=getdoc&hid='+veic.IMAGE+'&tipodoc=DOC';
         } else {
             return server+'/img/blank_male.png';
         }
@@ -706,7 +707,7 @@ function getSrcUserImage(u){ // restituisce l'src dell'immagine profilo utente
         if( (user.IMAGE==undefined) || (user.IMAGE.length < 1) ){
             var src_image = server+'/img/blank_male.png';
         } else {
-            var src_image = server+'/ecs/?Service=Document&Action=getdoc&hid='+user.IMAGE+'&tipodoc=DOC';
+            var src_image = server+'/sf/?Service=Document&Action=getdoc&hid='+user.IMAGE+'&tipodoc=DOC';
         }
     }
 
@@ -725,7 +726,7 @@ async function getProfiloUtente(){
 		$('body').find('[tipo="user-name2"]').text(PROFILO.NOMINATIVO);
 		var src_user_image = server+'/img/blank_male.png';
 		if(PROFILO.IMMAGINE!=undefined && PROFILO.IMMAGINE.length > 1){
-            var src_user_image = server+'/ecs/?Service=Document&Action=getdoc&hid='+PROFILO.IMMAGINE+'&tipodoc=DOC';
+            var src_user_image = server+'/sf/?Service=Document&Action=getdoc&hid='+PROFILO.IMMAGINE+'&tipodoc=DOC';
         }
 		$('body').find('#userDropdown img').attr('src', src_user_image);
 		return(ret);
@@ -814,17 +815,17 @@ function getUrlLink(url){
 }
 
 function getDocUrl(hid){
-	return(server+'/ecs/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=DOC');
+	return(server+'/sf/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=DOC');
 }
 
 function getPDFUrl(hid){
-	console.log('URL DOC PDF:'+server+'/ecs/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=PDF');
-	return(server+'/ecs/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=PDF');
+	console.log('URL DOC PDF:'+server+'/sf/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=PDF');
+	return(server+'/sf/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc=PDF');
 }
 
 function getDocumentoServer(hid,tipodoc){
 	if (hid!=undefined &&tipodoc!=undefined){
-		window.open(server+'/ecs/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc='+tipodoc,'_blank');
+		window.open(server+'/sf/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc='+tipodoc,'_blank');
 		return;
 			
 	}
@@ -832,7 +833,7 @@ function getDocumentoServer(hid,tipodoc){
 	
 	console.log('Get Documnento:'+hid+' --->'+doc);
 	if (doc!=undefined){
-		window.open(server+'/ecs/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc='+doc.TIPO_DOCUMENTO,'_blank');
+		window.open(server+'/sf/?Service=Document&Action=getdoc&hid='+hid+'&tipodoc='+doc.TIPO_DOCUMENTO,'_blank');
 		}
 }
 
@@ -948,14 +949,14 @@ async function getSintesiDocumento(hid,td){
 function docLink(el){
 	var link=$(el).attr('link');
 	if (link!=undefined){
-		window.open('/ecs/?Service=Document&Action=getdoc&hid='+link+'&tipodoc=DOC','_blank');
+		window.open('/sf/?Service=Document&Action=getdoc&hid='+link+'&tipodoc=DOC','_blank');
 		}
 }
 
 function docLinkPdf(el){
 	var link=$(el).attr('link');
 	if (link!=undefined){
-		window.open('/ecs/?Service=Document&Action=getdoc&hid='+link+'&tipodoc=PDF','_blank');
+		window.open('/sf/?Service=Document&Action=getdoc&hid='+link+'&tipodoc=PDF','_blank');
 		}
 }
 
@@ -6371,7 +6372,7 @@ Risorsa.prototype._addInternal = function(){
           var docel=$('#docelement').clone();
           $(docel).removeAttr('id');
           $(docel).find('[tipo="NOMEFILE"] a').text(doc.NOMEFILE);
-          var href=server+"/ecs/?Service=Document&Action=getdoc&hid="+doc.HID+"&tipodoc="+"DOC";
+          var href=server+"/sf/?Service=Document&Action=getdoc&hid="+doc.HID+"&tipodoc="+"DOC";
           $(docel).find('[tipo="NOMEFILE"] a').attr('href',href);
           $(docel).find('[tipo="SIZE"]').text(doc.SIZE);
           $(docel).find('[bottone]').attr('hid',doc.HID);
@@ -11863,7 +11864,7 @@ Risorsa.prototype._addInternal = function(){
                   formData.append('parametri',JSON.stringify(d));
           //	}
               // Use `jQuery.ajax` method
-            $.ajax(server+'/ecs/?Service=Upload&Action=upload', {
+            $.ajax(server+'/sf/?Service=Upload&Action=upload', {
                   method: "POST",
                   data: formData,
                   processData: false,
@@ -12347,7 +12348,7 @@ Risorsa.prototype._addInternal = function(){
             formData.append('parametri',JSON.stringify(d));
     //	}
         // Use `jQuery.ajax` method
-      $.ajax(server+'/ecs/?Service=Upload&Action=upload', {
+      $.ajax(server+'/sf/?Service=Upload&Action=upload', {
             method: "POST",
             async: true,
             data: formData,
@@ -12359,7 +12360,7 @@ Risorsa.prototype._addInternal = function(){
               if (response.Esito=='OK'){
                 var docfs=response.DOCUMENTO;
                 console.log('DOC is:'+doc.HID+' and perhaps we call '+callback);
-                //window.open("/ecs/?Service=Document&Action=getdoc&hid="+doc.HID+"&tipodoc=DOC");
+                //window.open("/sf/?Service=Document&Action=getdoc&hid="+doc.HID+"&tipodoc=DOC");
                 if (callback!=undefined){
                     /**ATTENZIONE LA PROSSIMA RIGA E' STATA INSERITA IL 20190530 PER CONSENTIRE ALLA CALLBACK DI FARE get(dochid) */
                     Risorsa.registerElement(docfs);
@@ -14424,11 +14425,11 @@ Risorsa.prototype._addInternal = function(){
       var newbadge=jQuery.parseHTML(bdg);
       if (ogg!=undefined){
           if (ogg.IMMAGINE!=undefined){
-              var image = server+"/ecs/?Service=Document&Action=getdoc&hid="+ ogg.IMMAGINE +'&tipodoc=DOC' ;
+              var image = server+"/sf/?Service=Document&Action=getdoc&hid="+ ogg.IMMAGINE +'&tipodoc=DOC' ;
               $(newbadge).find('img').attr('src',image);
               }else{
                   if (ogg.IMAGE!=undefined){
-                      var image = server+"/ecs/?Service=Document&Action=getdoc&hid="+ ogg.IMAGE +'&tipodoc=DOC' ;
+                      var image = server+"/sf/?Service=Document&Action=getdoc&hid="+ ogg.IMAGE +'&tipodoc=DOC' ;
                       $(newbadge).find('img').attr('src',image);
                       }else{
                       $(newbadge).find('img').attr('src',imagebase);
@@ -15648,3 +15649,254 @@ Risorsa.prototype._addInternal = function(){
    /**
     * End Viste Functions
     */
+
+    /**
+     * WS 
+     */
+
+var WSHOP=undefined;
+var WSACTIVE=false;
+var ENDSLEEP={};
+var WSMSGCONS={};
+
+
+async function HOPinitWS(){
+    //alert('HOPinitWS');
+    try {
+        
+   
+    var v=window.location.origin;
+    if (v.startsWith('file')){
+        v=server;
+    }
+    //var wsserver=v.replace('https','ws')+"/ws/";
+   var  wsserver=v.replace('http','ws')+"/ws/";
+    WSHOP = new WebSocket(wsserver,'hopperix');
+    var test=startsleep();
+    WSHOP.onopen = function (event) {
+        console.log("Il web socket e' connesso!");
+        WSACTIVE=true; 
+        endsleep(test);
+      };
+      WSHOP.onmessage = async function (event) {
+        console.log("Ricevuto messaggio:"+event.data);
+        try {
+            var resp=JSON.parse(event.data);
+            if (resp.TIPO!=undefined ){
+                var tipo=resp.TIPO;
+                if (WSMSGCONS[tipo]!=undefined){
+                    var f=WSMSGCONS[tipo];
+                    try {
+                        await f(resp.MSG);
+                        return;
+                    } catch (error) {
+                        console.log(error.stack);
+                        addMsg("WS MESSAGES",'On message:'+error.stack);
+                    }
+                }
+            }
+            addMsg("WS MESSAGES",'Tipo messaggio '+resp.TIPO +' non gestito:'+JSON.stringify(resp.MSG));
+            if (resp.TIPO=='ECHO'){
+                alert('Messaggio ricevuto:'+JSON.stringify(resp.MSG));
+            }
+            if (resp.TIPO=='MESSAGGI'){
+                alert('Messaggio ricevuto:'+JSON.stringify(resp.MSG));
+            }
+        } catch (error) {
+            
+        }
+      };
+    } catch (error) {
+        alert('Problemi:'+error);
+    }
+    await sleepingto(30,5000);  
+      
+}
+
+async function HOPsendWS(tipo,msg){
+    if (WSACTIVE){
+       // addMsg2('HHOPsendWS','Send ');
+        WSHOP.send(JSON.stringify({TIPO:tipo,MSG:msg}));
+       // addMsg2('HHOPsendWS','After Send ');
+    }else{
+        return(false);
+    }
+}
+
+var HOPWSCHECK={};
+async function HOPcheckWS(){
+    if (WSACTIVE){
+       var test="WSCHECK_"+generateID();
+       HOPsendWS('ECHO',{'CHECK':test});
+       var t=0;
+       var timeo=30000;
+       var tst=HOPWSCHECK[test];
+       while (tst==undefined && t<timeo){
+           await sleeping(30);
+           t=t+30;
+           tst=HOPWSCHECK[test];
+       }
+       if (t>=timeo){
+           //è scattato il timeout
+           // ci ricolleghiamo
+           if (window.INAPP!=undefined && window.INAPP){
+           cordova.plugins.backgroundMode.wakeUp();
+           // Turn screen on and show app even locked
+           cordova.plugins.backgroundMode.unlock();
+           cordova.plugins.backgroundMode.moveToForeground();
+           }
+           HOPinitWS();
+           await sleeping(2000);
+           addMsg('HOPCHECKWS','Riattivazione servizi WebSocket a seguito di check ',"WARN");
+           
+       }else{
+        addMsg('HOPCHECKWS','Connessione OK!');
+       }
+       delete HOPWSCHECK[test];
+      
+    }else{
+        return(false);
+    }
+}
+
+async function sleepingto(test,ms, timeo){
+    var t=0;
+    
+    while(!ENDSLEEP[test] && t<timeo){
+        await sleeping(ms);
+        t=t+ms;
+    }  
+    delete ENDSLEEP[test];
+}
+
+function startsleep(){
+    var test="SL_"+generateID();
+    return(test);
+}
+function endsleep(test){
+    ENDSLEEP[test]=true;
+}
+
+WSMSGCONS.ECHO=HOPretcheckWS;
+WSMSGCONS.RESOP=HOPresopWS;
+
+async function HOPretcheckWS(rec){
+    var check=rec.CHECK;
+    if (check!=undefined){
+            /**
+             * Da usarsi per testare la connessione!!!
+             */
+            addMsg('TESTWS','Messaggio di echo:'+check);
+            var test=check;
+            HOPWSCHECK[test]="1";
+         
+    }else{
+        addMsg('TESTWS','Messaggio di echo:'+JSON.stringify(rec));
+    }
+    
+}
+
+var CALLBACKHELL={};
+async function HOPresopWS(rec){
+   //JSON.stringify(rec);
+    addMsg('RESOP','Ricevuto messaggio RESOP:'+JSON.stringify(rec));
+    var f=CALLBACKHELL[rec.HID];
+    if (f!=undefined){
+        addMsg('RESOP','Chiamo funzione in callback');
+        f(rec);
+    }else{
+        addMsg('RESOP','Attenzione:Manca la callback:'+JSON.stringify(rec),'WARN');
+    }
+    
+}
+ 
+
+
+
+
+     /**
+      * End WS
+      * 
+      */
+
+      /**
+       * Funzioni WS
+       */
+
+      async function HOPmessaggiWS(rec){
+        var oper=rec.OPER;
+        switch (oper) {
+            case 'ACTIVEUSERS':
+                var hids=rec.ONLINEHID;
+                UTENTIONLINE=rec.UTENTIONLINE;
+                $('body').find('[chatutente]').css('color','transparent');
+                if (hids!=undefined){
+                    for (var i=0;i<hids.length;i++){
+                        var test='[chatutente="'+hids[i]+'"]';
+                        $('body').find(test).css('color','var(--hop-chatonline)');
+                        console.log(' Per HID:'+hids[i]+' con test '+test+' '+$('body').find('[chatutente="'+hids[i]+'"]').length+' icone da aggiornare');
+                    }
+                }
+                addMsg("HOPmessaggiWS",'Processato aggiornamento utenti attivi');
+                break;
+        
+            case 'NEWMESSAGES':
+                getContatti();
+                break;
+    
+            case 'SCAN':
+               // alert('SCANSITO:'+JSON.stringify(rec.DATI));
+                var tipo=rec.DATI.TIPO;
+                if (tipo!=undefined){
+                    var ret=confirm('Vuoi aprire il dettaglio del '+tipo+' corrispondente al codice letto con il cellulare?');
+                    if (ret){
+                        var ogg=Risorsa.load(rec.DATI.HID);
+                        var el=document.getElementById('elappoggio');
+                        $(el).attr('hid',rec.DATI.HID);
+                      /*  var FUNZIONIDETTAGLIO={
+                            'VEICOLI':editVeicolo,
+                            'ATTREZZATURA':editattrezzature,
+                            'MACCHINAEDILE':editmacchineedili,
+                            'DPI':editDpi,
+                            'CLIENTE':editCliente,
+                            'PREVENTIVO':ModificaPreventivo,
+                            'COMMESSA':ModificaCommessa,
+                            'RESI':visualizzaReso
+    
+                        };*/
+                        if (FunzDett[tipo]!=undefined){
+                            var f=FunzDett[tipo];
+                            f(el);
+                        }
+                    }else{
+    
+                    }
+                }
+                break;
+    
+            case 'OSCAN':
+                window.open('https://duckduckgo.com/?q='+rec.DATI.TESTO,'_blank');
+                break;
+    
+            case 'ECHO':
+                /**
+                 * Da usarsi per testare la connessione!!!
+                 */
+                var t=rec.MSG;
+                addMsg('TESTWS','Messaggio di echo:'+JSON.stringify(t));
+                var test=t.CHECK;
+                HOPWSCHECK[test]="1";
+                break;    
+    
+            default:
+                addMsg("HOPmessaggiWS",'Operazione '+oper+' non gestita','WARN');
+                break;
+        }
+        
+    }
+    
+    WSMSGCONS.MESSAGGI=HOPmessaggiWS;
+
+       /**
+        * End Funzioni WS
+        */
